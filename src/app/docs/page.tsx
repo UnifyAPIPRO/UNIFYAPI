@@ -26,7 +26,7 @@ export default function DocsPage() {
           ["auth",        "Authentication"],
           ["rest",        "REST API"],
           ["mcp",         "MCP endpoint"],
-          ["claude",      "Claude Desktop"],
+          ["claude",      "Connect a client"],
           ["discovery",   "Discovery"],
           ["categories",  "Categories"],
           ["payments",    "Payments (x402)"],
@@ -129,7 +129,7 @@ export default function DocsPage() {
           <pre className="code-block">{`Authorization: Bearer uak_live_xxxxxxxxxxxxxxxxxxxxxxxx`}</pre>
           <p>
             The <Code>/api/tools</Code>, <Code>/api/openapi</Code>, and <Code>/api/agent-card</Code>{" "}
-            endpoints are public. <Code>/api/call/{"{slug}"}</Code> and <Code>tools/call</Code> via
+            endpoints are public. <Code>{"/api/call/{slug}"}</Code> and <Code>tools/call</Code> via
             MCP require a valid key with sufficient balance.
           </p>
           <p>
@@ -221,11 +221,18 @@ Content-Type: application/json
           </p>
         </Section>
 
-        {/* Claude Desktop */}
-        <Section id="claude" title="Claude Desktop integration">
+        {/* Connect your client */}
+        <Section id="claude" title="Connect your AI client">
           <p>
-            Add UnifyAPI to your <Code>claude_desktop_config.json</Code> to give Claude access to
-            all 818 tools instantly:
+            UnifyAPI works with any MCP-compatible client. Add the endpoint once and your agent
+            instantly discovers all 818 tools via <Code>tools/list</Code>. Grab a key from the{" "}
+            <Link className="text-primary-2 hover:underline" href="/dashboard">dashboard</Link> first.
+          </p>
+
+          <p className="text-foreground font-medium mt-4">Claude Desktop</p>
+          <p>
+            Edit <Code>claude_desktop_config.json</Code> (Settings → Developer → Edit Config), then
+            restart Claude:
           </p>
           <pre className="code-block">{`{
   "mcpServers": {
@@ -238,13 +245,40 @@ Content-Type: application/json
     }
   }
 }`}</pre>
+
+          <p className="text-foreground font-medium mt-4">Cursor</p>
+          <p>
+            Create <Code>.cursor/mcp.json</Code> in your project (or <Code>~/.cursor/mcp.json</Code>{" "}
+            for global), then enable it under Settings → MCP:
+          </p>
+          <pre className="code-block">{`{
+  "mcpServers": {
+    "unifyapi": {
+      "url": "https://unifyapi.pro/api/mcp",
+      "headers": {
+        "Authorization": "Bearer uak_live_..."
+      }
+    }
+  }
+}`}</pre>
+
+          <p className="text-foreground font-medium mt-4">Cline / Continue (VS Code)</p>
+          <p>
+            Open the MCP Servers panel → <em>Configure MCP Servers</em> and add the same block:
+          </p>
+          <pre className="code-block">{`{
+  "mcpServers": {
+    "unifyapi": {
+      "url": "https://unifyapi.pro/api/mcp",
+      "headers": { "Authorization": "Bearer uak_live_..." }
+    }
+  }
+}`}</pre>
+
           <p>
             For local development replace the URL with{" "}
-            <Code>http://localhost:3000/api/mcp</Code>. Restart Claude Desktop after saving.
-          </p>
-          <p>
-            Once connected, Claude will automatically discover all available tools via{" "}
-            <Code>tools/list</Code> and can call any of them within a conversation.
+            <Code>http://localhost:3000/api/mcp</Code>. Restart the client after saving so it
+            re-reads the config and re-discovers tools.
           </p>
         </Section>
 

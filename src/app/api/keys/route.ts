@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { getSessionUser } from "@/lib/auth";
-import { generateApiKey } from "@/lib/apiKeys";
+import { encryptKey, generateApiKey } from "@/lib/apiKeys";
 
 export async function GET() {
   const user = await getSessionUser();
@@ -32,6 +32,7 @@ export async function POST(req: Request) {
       hashedKey: generated.hashedKey,
       prefix: generated.prefix,
       last4: generated.last4,
+      encryptedKey: encryptKey(generated.plaintext),
       label,
       userId: user.id,
     },

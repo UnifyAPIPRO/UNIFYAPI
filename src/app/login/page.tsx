@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { GoogleButton } from "@/components/GoogleButton";
+import { TwitterButton } from "@/components/TwitterButton";
 import { WalletLogin } from "@/components/WalletLogin";
 
 function Brand() {
@@ -72,6 +73,7 @@ export default function LoginPage() {
 
         <div className="mt-3 space-y-3">
           <GoogleButton />
+          <TwitterButton />
           <WalletLogin />
         </div>
 

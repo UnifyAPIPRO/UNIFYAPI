@@ -5,12 +5,136 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { LogoutButton } from "@/components/LogoutButton";
 
+function CopyButton({ text }: { text: string }) {
+  const [copied, setCopied] = useState(false);
+  const copy = () => {
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+  return (
+    <button
+      onClick={copy}
+      className="shrink-0 text-xs px-3 py-1.5 rounded-lg border border-border hover:border-accent hover:text-accent transition-colors"
+    >
+      {copied ? "Copied!" : "Copy"}
+    </button>
+  );
+}
+
+function RevealKeyButton({ id }: { id: string }) {
+  const [plain, setPlain] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const reveal = async () => {
+    if (plain) { setPlain(null); return; }
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch(`/api/keys/${id}/reveal`);
+      const data = await res.json();
+      if (!res.ok) { setError(data.error); return; }
+      setPlain(data.plaintext);
+    } catch {
+      setError("Failed to reveal key.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="flex flex-col gap-1 w-full">
+      {plain && (
+        <div className="flex items-center gap-2">
+          <code className="text-xs font-mono bg-background border border-border rounded px-2 py-1 flex-1 overflow-x-auto select-all">{plain}</code>
+          <CopyButton text={plain} />
+        </div>
+      )}
+      {error && <p className="text-xs text-red-400">{error}</p>}
+      <div className="flex justify-end">
+        <button
+          onClick={reveal}
+          disabled={loading}
+          className="text-xs text-muted hover:text-foreground transition-colors"
+        >
+          {loading ? "Loading…" : plain ? "Hide" : "Show key"}
+        </button>
+      </div>
+    </div>
+  );
+}
+
 type Me = {
   user: { id: string; email: string; balance: number };
   stats: { calls: number; totalSpend: number };
   keys: { id: string; masked: string; label: string; createdAt: string; lastUsedAt: string | null }[];
   recent: { id: string; tool: string; toolName: string; status: string; cost: number; latencyMs: number; at: string }[];
 };
+
+type Recent = Me["recent"];
+
+function Analytics({ recent }: { recent: Recent }) {
+  // spend grouped by tool
+  const spendByTool = new Map<string, number>();
+  const callsByTool = new Map<string, number>();
+  let success = 0;
+  for (const r of recent) {
+    spendByTool.set(r.tool, (spendByTool.get(r.tool) ?? 0) + r.cost);
+    callsByTool.set(r.tool, (callsByTool.get(r.tool) ?? 0) + 1);
+    if (r.status === "success") success++;
+  }
+  const topTools = [...callsByTool.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 6);
+  const maxCalls = Math.max(...topTools.map(([, c]) => c), 1);
+  const successRate = Math.round((success / recent.length) * 100);
+  const avgLatency = Math.round(
+    recent.reduce((s, r) => s + r.latencyMs, 0) / recent.length,
+  );
+
+  return (
+    <div className="mt-8 card p-6">
+      <h2 className="font-semibold">Usage analytics</h2>
+      <p className="text-sm text-muted mt-1">Based on your last {recent.length} calls.</p>
+
+      <div className="mt-5 grid sm:grid-cols-3 gap-4">
+        <div className="border border-border rounded-lg p-4">
+          <div className="text-xs text-muted">Success rate</div>
+          <div className="text-2xl font-bold mt-1 text-accent">{successRate}%</div>
+        </div>
+        <div className="border border-border rounded-lg p-4">
+          <div className="text-xs text-muted">Avg latency</div>
+          <div className="text-2xl font-bold mt-1">{avgLatency}ms</div>
+        </div>
+        <div className="border border-border rounded-lg p-4">
+          <div className="text-xs text-muted">Tools used</div>
+          <div className="text-2xl font-bold mt-1">{callsByTool.size}</div>
+        </div>
+      </div>
+
+      <div className="mt-6">
+        <div className="text-xs text-muted mb-3">Most-called tools</div>
+        <div className="space-y-2.5">
+          {topTools.map(([tool, count]) => (
+            <div key={tool} className="flex items-center gap-3">
+              <span className="code text-xs w-40 truncate shrink-0">{tool}</span>
+              <div className="flex-1 h-2 rounded-full bg-border overflow-hidden">
+                <div
+                  className="h-full bg-primary-2 rounded-full"
+                  style={{ width: `${(count / maxCalls) * 100}%` }}
+                />
+              </div>
+              <span className="text-xs text-muted w-16 text-right">
+                {count} · ${(spendByTool.get(tool) ?? 0).toFixed(3)}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -37,13 +161,21 @@ export default function DashboardPage() {
 
   async function createKey() {
     setBusy(true);
-    const res = await fetch("/api/keys", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({}) });
-    const data = await res.json();
-    setBusy(false);
-    if (res.ok) {
-      setNewKey(data.key);
-      localStorage.setItem("unifyapi_key", data.key);
-      load();
+    setNotice(null);
+    try {
+      const res = await fetch("/api/keys", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({}) });
+      const data = await res.json();
+      if (res.ok) {
+        setNewKey(data.key);
+        localStorage.setItem("unifyapi_key", data.key);
+        load();
+      } else {
+        setNotice(data.error ?? "Failed to create key.");
+      }
+    } catch (e) {
+      setNotice("Network error — could not reach server.");
+    } finally {
+      setBusy(false);
     }
   }
 
@@ -121,20 +253,29 @@ export default function DashboardPage() {
           {newKey && (
             <div className="mt-3">
               <p className="text-xs text-accent">Copy this now — it won&apos;t be shown again:</p>
-              <pre className="code-block mt-1 !text-xs select-all">{newKey}</pre>
+              <div className="flex items-center gap-2 mt-1">
+                <pre className="code-block !text-xs select-all flex-1 overflow-x-auto">{newKey}</pre>
+                <CopyButton text={newKey} />
+              </div>
             </div>
           )}
           <div className="mt-4 space-y-2">
             {me.keys.length === 0 && <p className="text-sm text-muted">No keys yet.</p>}
             {me.keys.map((k) => (
-              <div key={k.id} className="flex items-center justify-between text-sm border border-border rounded-lg px-3 py-2">
-                <span className="code">{k.masked}</span>
-                <button onClick={() => revokeKey(k.id)} className="text-xs text-red-400 hover:underline">Revoke</button>
+              <div key={k.id} className="flex flex-col gap-2 text-sm border border-border rounded-lg px-3 py-3">
+                <div className="flex items-center justify-between">
+                  <span className="code">{k.masked}</span>
+                  <button onClick={() => revokeKey(k.id)} className="text-xs text-red-400 hover:underline shrink-0 ml-3">Revoke</button>
+                </div>
+                <RevealKeyButton id={k.id} />
               </div>
             ))}
           </div>
         </div>
       </div>
+
+      {/* Analytics */}
+      {me.recent.length > 0 && <Analytics recent={me.recent} />}
 
       {/* Recent usage */}
       <div className="mt-8 card p-6">

@@ -69,6 +69,12 @@ function StackBadge({ name, role }: { name: string; role: string }) {
   );
 }
 
+const TEAM = [
+  { role: "Founder & Engineering", img: "/team/1.png" },
+  { role: "Protocol & x402", img: "/team/2.png" },
+  { role: "Catalog & Growth", img: "/team/3.png" },
+];
+
 export default function AboutPage() {
   return (
     <div className="mx-auto max-w-5xl px-5 py-16 space-y-28">
@@ -451,6 +457,86 @@ export default function AboutPage() {
         <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
           <Link href="/tools" className="btn btn-primary">Explore the catalog</Link>
           <Link href="/docs" className="btn btn-ghost">View the docs</Link>
+        </div>
+      </section>
+
+      {/* ── Team ───────────────────────────────────────────────────── */}
+      <section className="text-center space-y-10">
+        <div className="space-y-3">
+          <p className="text-xs font-mono text-primary-2 tracking-widest uppercase">Team</p>
+          <h2 className="text-3xl font-bold">The people behind UnifyAPI</h2>
+          <p className="text-muted text-sm max-w-xl mx-auto">
+            A small team obsessed with making the entire API surface of the internet
+            accessible to autonomous agents.
+          </p>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-10 max-w-3xl mx-auto">
+          {TEAM.map((m) => (
+            <div key={m.role} className="flex flex-col items-center gap-4">
+              <img
+                src={m.img}
+                alt={m.role}
+                className="h-32 w-32 rounded-full object-cover border-2 border-border"
+              />
+              <p className="text-sm text-primary-2 font-medium">{m.role}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── Built With ─────────────────────────────────────────────── */}
+      <section className="text-center space-y-8">
+        <div className="space-y-3">
+          <p className="text-xs font-mono text-primary-2 tracking-widest uppercase">Built With</p>
+          <h2 className="text-3xl font-bold">Powered by the best stack</h2>
+          <p className="text-muted text-sm max-w-xl mx-auto">
+            UnifyAPI is built and shipped entirely using cutting-edge tools — from AI-assisted
+            development to decentralized payments and authentication.
+          </p>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-3xl mx-auto">
+          {/* Claude Code */}
+          <div className="card p-6 flex flex-col items-center gap-4 text-center">
+            <div className="h-14 w-14 rounded-2xl flex items-center justify-center overflow-hidden bg-white">
+              <img src="/logos/claude-code.png" alt="Claude Code" className="h-9 w-9" />
+            </div>
+            <div className="space-y-1">
+              <p className="font-semibold">Claude Code</p>
+              <p className="text-xs font-mono" style={{color:"#D97757"}}>Opus 4.8</p>
+              <p className="text-xs text-muted leading-relaxed">
+                Entire codebase written and shipped with Claude Code — Anthropic&apos;s most powerful AI coding agent.
+              </p>
+            </div>
+          </div>
+          {/* Privy */}
+          <div className="card p-6 flex flex-col items-center gap-4 text-center">
+            <div className="h-14 w-14 rounded-2xl flex items-center justify-center overflow-hidden bg-white">
+              <svg width="36" height="36" viewBox="0 0 100 100" fill="none">
+                <ellipse cx="50" cy="38" rx="28" ry="28" fill="#09090F"/>
+                <ellipse cx="50" cy="82" rx="14" ry="5" fill="#09090F"/>
+              </svg>
+            </div>
+            <div className="space-y-1">
+              <p className="font-semibold">Privy</p>
+              <p className="text-xs font-mono text-purple-400">Auth & Wallets</p>
+              <p className="text-xs text-muted leading-relaxed">
+                Seamless authentication via email, Google, and Twitter — with embedded wallets created automatically on login.
+              </p>
+            </div>
+          </div>
+          {/* Base */}
+          <div className="card p-6 flex flex-col items-center gap-4 text-center">
+            <div className="h-14 w-14 rounded-2xl flex items-center justify-center overflow-hidden">
+              <img src="/logos/base.jpg" alt="Base" className="h-14 w-14 object-cover" />
+            </div>
+            <div className="space-y-1">
+              <p className="font-semibold">Base Network</p>
+              <p className="text-xs font-mono text-blue-400">L2 by Coinbase</p>
+              <p className="text-xs text-muted leading-relaxed">
+                All x402 micropayments settle on Base — Coinbase&apos;s Ethereum L2 with near-zero fees and instant finality.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 

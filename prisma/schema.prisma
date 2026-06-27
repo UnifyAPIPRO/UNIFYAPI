@@ -78,17 +78,18 @@ model User {
 }
 
 model ApiKey {
-  id         String        @id @default(cuid())
-  hashedKey  String        @unique
-  prefix     String // e.g. "uak_live"
-  last4      String
-  label      String        @default("Default key")
-  revoked    Boolean       @default(false)
-  createdAt  DateTime      @default(now())
-  lastUsedAt DateTime?
-  userId     String
-  user       User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  usage      UsageRecord[]
+  id           String        @id @default(cuid())
+  hashedKey    String        @unique
+  prefix       String // e.g. "uak_live"
+  last4        String
+  encryptedKey String? // AES-256-GCM encrypted plaintext, for reveal
+  label        String        @default("Default key")
+  revoked      Boolean       @default(false)
+  createdAt    DateTime      @default(now())
+  lastUsedAt   DateTime?
+  userId       String
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  usage        UsageRecord[]
 
   @@index([userId])
 }

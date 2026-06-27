@@ -266,6 +266,428 @@ async function runLive(slug: string, input: Input): Promise<unknown> {
         stats: Object.fromEntries((data.stats ?? []).map((s) => [s.stat?.name, s.base_stat])),
       };
     }
+    case "country.by_code": {
+      const code = str(input.code, "ID").toUpperCase();
+      const arr = (await fetchJson(
+        `https://restcountries.com/v3.1/alpha/${encodeURIComponent(code)}`,
+      )) as Array<Record<string, unknown>>;
+      const c = arr?.[0] as Record<string, unknown> | undefined;
+      if (!c) return { code, match: null };
+      const name = c.name as { common?: string; official?: string } | undefined;
+      const currencies = c.currencies as Record<string, { name?: string }> | undefined;
+      return {
+        code,
+        name: name?.common,
+        officialName: name?.official,
+        capital: (c.capital as string[] | undefined)?.[0] ?? null,
+        region: c.region,
+        subregion: c.subregion,
+        population: c.population,
+        currencies: currencies ? Object.keys(currencies) : [],
+        flag: c.flag,
+      };
+    }
+    case "country.search": {
+      const name = str(input.name, "Indonesia");
+      const arr = (await fetchJson(
+        `https://restcountries.com/v3.1/name/${encodeURIComponent(name)}`,
+      )) as Array<Record<string, unknown>>;
+      return {
+        query: name,
+        matches: (arr ?? []).slice(0, 5).map((c) => {
+          const n = c.name as { common?: string } | undefined;
+          return {
+            name: n?.common,
+            code: c.cca2,
+            capital: (c.capital as string[] | undefined)?.[0] ?? null,
+            region: c.region,
+            population: c.population,
+          };
+        }),
+      };
+    }
+    case "bible.passage": {
+      const book = str(input.book, "John");
+      const chapter = str(input.chapter, "3");
+      const translation = str(input.translation, "web").toLowerCase();
+      const data = (await fetchJson(
+        `https://bible-api.com/${encodeURIComponent(`${book} ${chapter}`)}?translation=${encodeURIComponent(translation)}`,
+      )) as { reference?: string; translation_name?: string; text?: string };
+      return {
+        reference: data.reference,
+        translation: data.translation_name,
+        text: data.text?.trim(),
+      };
+    }
+    case "anime.search": {
+      const query = str(input.query, "naruto");
+      const limit = Math.min(10, Math.max(1, Math.round(num(input.limit, 5))));
+      const data = (await fetchJson(
+        `https://api.jikan.moe/v4/anime?q=${encodeURIComponent(query)}&limit=${limit}`,
+      )) as { data?: Array<Record<string, unknown>> };
+      return {
+        query,
+        results: (data.data ?? []).map((a) => ({
+          title: a.title,
+          type: a.type,
+          episodes: a.episodes,
+          score: a.score,
+          year: a.year,
+          url: a.url,
+        })),
+      };
+    }
+    case "anime.top": {
+      const limit = Math.min(25, Math.max(1, Math.round(num(input.limit, 10))));
+      const data = (await fetchJson(`https://api.jikan.moe/v4/top/anime?limit=${limit}`)) as {
+        data?: Array<Record<string, unknown>>;
+      };
+      return {
+        results: (data.data ?? []).map((a, i) => ({
+          rank: i + 1,
+          title: a.title,
+          score: a.score,
+          type: a.type,
+          episodes: a.episodes,
+          url: a.url,
+        })),
+      };
+    }
+    case "brasilapi.banks": {
+      const data = (await fetchJson("https://brasilapi.com.br/api/banks/v1")) as Array<{
+        ispb?: string; name?: string; code?: number | null; fullName?: string;
+      }>;
+      return {
+        count: data?.length ?? 0,
+        banks: (data ?? [])
+          .filter((b) => b.code != null)
+          .slice(0, 50)
+          .map((b) => ({ code: b.code, name: b.name, fullName: b.fullName })),
+      };
+    }
+    case "brasilapi.holidays": {
+      const year = Math.round(num(input.year, new Date().getFullYear()));
+      const data = (await fetchJson(
+        `https://brasilapi.com.br/api/feriados/v1/${year}`,
+      )) as Array<{ date?: string; name?: string; type?: string }>;
+      return {
+        year,
+        holidays: (data ?? []).map((h) => ({ date: h.date, name: h.name, type: h.type })),
+      };
+    }
+    case "books.search": {
+      const query = str(input.query, "clean code");
+      const limit = Math.min(10, Math.max(1, Math.round(num(input.limit, 5))));
+      const data = (await fetchJson(
+        `https://openlibrary.org/search.json?q=${encodeURIComponent(query)}&limit=${limit}&fields=key,title,author_name,first_publish_year,isbn`,
+      )) as { numFound?: number; docs?: Array<Record<string, unknown>> };
+      return {
+        query,
+        total: data.numFound ?? 0,
+        books: (data.docs ?? []).map((b) => ({
+          title: b.title,
+          authors: b.author_name,
+          firstPublished: b.first_publish_year,
+          key: b.key,
+        })),
+      };
+    }
+    case "books.isbn_lookup": {
+      const isbn = str(input.isbn, "9780132350884");
+      const data = (await fetchJson(
+        `https://openlibrary.org/api/books?bibkeys=ISBN:${isbn}&format=json&jscmd=data`,
+      )) as Record<string, { title?: string; authors?: Array<{ name?: string }>; publish_date?: string; publishers?: Array<{ name?: string }>; number_of_pages?: number }>;
+      const book = data[`ISBN:${isbn}`];
+      if (!book) return { isbn, match: null };
+      return {
+        isbn,
+        title: book.title,
+        authors: (book.authors ?? []).map((a) => a.name),
+        published: book.publish_date,
+        publisher: book.publishers?.[0]?.name ?? null,
+        pages: book.number_of_pages ?? null,
+      };
+    }
+    case "cocktail.search": {
+      const name = str(input.name, "margarita");
+      const data = (await fetchJson(
+        `https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${encodeURIComponent(name)}`,
+      )) as { drinks?: Array<Record<string, string | null>> };
+      return {
+        query: name,
+        results: (data.drinks ?? []).slice(0, 5).map((d) => ({
+          name: d.strDrink,
+          category: d.strCategory,
+          glass: d.strGlass,
+          alcoholic: d.strAlcoholic,
+          instructions: d.strInstructions?.slice(0, 200),
+        })),
+      };
+    }
+    case "cocktail.random": {
+      const data = (await fetchJson(
+        "https://www.thecocktaildb.com/api/json/v1/1/random.php",
+      )) as { drinks?: Array<Record<string, string | null>> };
+      const d = data.drinks?.[0];
+      if (!d) return { drink: null };
+      return {
+        name: d.strDrink,
+        category: d.strCategory,
+        glass: d.strGlass,
+        alcoholic: d.strAlcoholic,
+        instructions: d.strInstructions,
+        thumbnail: d.strDrinkThumb,
+      };
+    }
+    case "iss.position": {
+      const data = (await fetchJson("http://api.open-notify.org/iss-now.json")) as {
+        iss_position?: { latitude?: string; longitude?: string }; timestamp?: number;
+      };
+      return {
+        latitude: parseFloat(data.iss_position?.latitude ?? "0"),
+        longitude: parseFloat(data.iss_position?.longitude ?? "0"),
+        timestamp: data.timestamp,
+      };
+    }
+    case "nasa.apod": {
+      const data = (await fetchJson(
+        "https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY",
+      )) as { title?: string; explanation?: string; url?: string; date?: string; media_type?: string };
+      return {
+        title: data.title,
+        date: data.date,
+        mediaType: data.media_type,
+        url: data.url,
+        explanation: data.explanation?.slice(0, 400),
+      };
+    }
+    case "disease.covid_global": {
+      const data = (await fetchJson("https://disease.sh/v3/covid-19/all")) as Record<string, number>;
+      return {
+        cases: data.cases,
+        deaths: data.deaths,
+        recovered: data.recovered,
+        active: data.active,
+        updated: data.updated,
+      };
+    }
+    case "disease.covid_country": {
+      const country = str(input.country, "indonesia");
+      const data = (await fetchJson(`https://disease.sh/v3/covid-19/countries/${encodeURIComponent(country)}`)) as Record<string, unknown>;
+      return {
+        country: data.country,
+        cases: data.cases,
+        deaths: data.deaths,
+        recovered: data.recovered,
+        active: data.active,
+        population: data.population,
+      };
+    }
+    case "npm.package_info": {
+      const pkg = str(input.package, "react");
+      const data = (await fetchJson(`https://registry.npmjs.org/${encodeURIComponent(pkg)}/latest`)) as {
+        name?: string; version?: string; description?: string; license?: string; homepage?: string;
+      };
+      return {
+        name: data.name,
+        version: data.version,
+        description: data.description,
+        license: data.license,
+        homepage: data.homepage,
+      };
+    }
+    case "npm.downloads": {
+      const pkg = str(input.package, "react");
+      const data = (await fetchJson(
+        `https://api.npmjs.org/downloads/point/last-month/${encodeURIComponent(pkg)}`,
+      )) as { downloads?: number; package?: string; start?: string; end?: string };
+      return {
+        package: data.package,
+        downloads: data.downloads,
+        period: `${data.start} to ${data.end}`,
+      };
+    }
+    case "pypi.package_info": {
+      const pkg = str(input.package, "requests");
+      const data = (await fetchJson(`https://pypi.org/pypi/${encodeURIComponent(pkg)}/json`)) as {
+        info?: { name?: string; version?: string; summary?: string; license?: string; home_page?: string; author?: string };
+      };
+      const i = data.info ?? {};
+      return {
+        name: i.name,
+        version: i.version,
+        summary: i.summary,
+        license: i.license,
+        author: i.author,
+        homepage: i.home_page,
+      };
+    }
+    case "github.user": {
+      const username = str(input.username, "torvalds");
+      const data = (await fetchJson(`https://api.github.com/users/${encodeURIComponent(username)}`)) as {
+        login?: string; name?: string; bio?: string; public_repos?: number; followers?: number; following?: number; created_at?: string;
+      };
+      return {
+        login: data.login,
+        name: data.name,
+        bio: data.bio,
+        publicRepos: data.public_repos,
+        followers: data.followers,
+        following: data.following,
+        createdAt: data.created_at,
+      };
+    }
+    case "github.repo": {
+      const owner = str(input.owner, "vercel");
+      const repo = str(input.repo, "next.js");
+      const data = (await fetchJson(`https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}`)) as {
+        full_name?: string; description?: string; stargazers_count?: number; forks_count?: number; open_issues_count?: number; language?: string; updated_at?: string;
+      };
+      return {
+        fullName: data.full_name,
+        description: data.description,
+        stars: data.stargazers_count,
+        forks: data.forks_count,
+        openIssues: data.open_issues_count,
+        language: data.language,
+        updatedAt: data.updated_at,
+      };
+    }
+    case "lichess.daily_puzzle": {
+      const data = (await fetchJson("https://lichess.org/api/puzzle/daily")) as {
+        puzzle?: { id?: string; rating?: number; plays?: number }; game?: { id?: string; pgn?: string };
+      };
+      return {
+        puzzleId: data.puzzle?.id,
+        rating: data.puzzle?.rating,
+        plays: data.puzzle?.plays,
+        gameId: data.game?.id,
+      };
+    }
+    case "lichess.user_profile": {
+      const username = str(input.username, "DrNykterstein");
+      const data = (await fetchJson(`https://lichess.org/api/user/${encodeURIComponent(username)}`)) as {
+        id?: string; username?: string; perfs?: Record<string, { rating?: number; games?: number }>; createdAt?: number; seenAt?: number;
+      };
+      return {
+        username: data.username,
+        blitzRating: data.perfs?.blitz?.rating,
+        rapidRating: data.perfs?.rapid?.rating,
+        bulletRating: data.perfs?.bullet?.rating,
+        gamesPlayed: Object.values(data.perfs ?? {}).reduce((s, p) => s + (p.games ?? 0), 0),
+      };
+    }
+    case "chesscom.player_profile": {
+      const username = str(input.username, "hikaru");
+      const data = (await fetchJson(`https://api.chess.com/pub/player/${encodeURIComponent(username)}`)) as {
+        username?: string; name?: string; title?: string; followers?: number; country?: string; joined?: number;
+      };
+      return {
+        username: data.username,
+        name: data.name,
+        title: data.title,
+        followers: data.followers,
+        country: data.country?.split("/").pop(),
+        joined: data.joined ? new Date(data.joined * 1000).toISOString().slice(0, 10) : null,
+      };
+    }
+    case "frankfurter.latest": {
+      const base = str(input.base, "USD").toUpperCase();
+      const data = (await fetchJson(`https://api.frankfurter.app/latest?from=${base}`)) as {
+        amount?: number; base?: string; date?: string; rates?: Record<string, number>;
+      };
+      return { base: data.base, date: data.date, rates: data.rates };
+    }
+    case "frankfurter.currencies": {
+      const data = (await fetchJson("https://api.frankfurter.app/currencies")) as Record<string, string>;
+      return { currencies: data };
+    }
+    case "gutendex.search": {
+      const query = str(input.query, "shakespeare");
+      const data = (await fetchJson(
+        `https://gutendex.com/books?search=${encodeURIComponent(query)}`,
+      )) as { count?: number; results?: Array<{ id?: number; title?: string; authors?: Array<{ name?: string }>; languages?: string[]; download_count?: number }> };
+      return {
+        total: data.count,
+        books: (data.results ?? []).slice(0, 5).map((b) => ({
+          id: b.id,
+          title: b.title,
+          authors: (b.authors ?? []).map((a) => a.name),
+          languages: b.languages,
+          downloads: b.download_count,
+        })),
+      };
+    }
+    case "gutendex.popular": {
+      const data = (await fetchJson("https://gutendex.com/books?sort=popular")) as {
+        results?: Array<{ id?: number; title?: string; authors?: Array<{ name?: string }>; download_count?: number }>;
+      };
+      return {
+        books: (data.results ?? []).slice(0, 10).map((b, i) => ({
+          rank: i + 1,
+          title: b.title,
+          authors: (b.authors ?? []).map((a) => a.name),
+          downloads: b.download_count,
+        })),
+      };
+    }
+    case "opentopodata.point": {
+      const lat = num(input.latitude, -6.2088);
+      const lon = num(input.longitude, 106.8456);
+      const data = (await fetchJson(
+        `https://api.opentopodata.org/v1/srtm30m?locations=${lat},${lon}`,
+      )) as { results?: Array<{ elevation?: number; location?: { lat?: number; lng?: number } }> };
+      const r = data.results?.[0];
+      return { latitude: lat, longitude: lon, elevationMeters: r?.elevation ?? null };
+    }
+    case "sunrisesunset.daily": {
+      const lat = num(input.latitude, -6.2088);
+      const lon = num(input.longitude, 106.8456);
+      const date = str(input.date, "today");
+      const data = (await fetchJson(
+        `https://api.sunrisesunset.io/json?lat=${lat}&lng=${lon}&date=${date}`,
+      )) as { results?: { sunrise?: string; sunset?: string; solar_noon?: string; day_length?: string; dawn?: string; dusk?: string } };
+      return { latitude: lat, longitude: lon, ...data.results };
+    }
+    case "wikidata.search": {
+      const query = str(input.query, "Indonesia");
+      const lang = str(input.language, "en");
+      const data = (await fetchJson(
+        `https://www.wikidata.org/w/api.php?action=wbsearchentities&search=${encodeURIComponent(query)}&language=${lang}&limit=5&format=json`,
+      )) as { search?: Array<{ id?: string; label?: string; description?: string; url?: string }> };
+      return {
+        query,
+        results: (data.search ?? []).map((r) => ({
+          id: r.id,
+          label: r.label,
+          description: r.description,
+          url: r.url,
+        })),
+      };
+    }
+    case "marine.wave_conditions": {
+      const lat = num(input.latitude, -6.2088);
+      const lon = num(input.longitude, 106.8456);
+      const data = (await fetchJson(
+        `https://marine-api.open-meteo.com/v1/marine?latitude=${lat}&longitude=${lon}` +
+          `&current=wave_height,wave_direction,wave_period,wind_wave_height`,
+      )) as { current?: Record<string, unknown>; current_units?: Record<string, string> };
+      return { latitude: lat, longitude: lon, current: data.current, units: data.current_units };
+    }
+    case "geo.distance": {
+      const lat1 = num(input.lat1, -6.2088);
+      const lon1 = num(input.lon1, 106.8456);
+      const lat2 = num(input.lat2, 1.3521);
+      const lon2 = num(input.lon2, 103.8198);
+      const R = 6371;
+      const dLat = ((lat2 - lat1) * Math.PI) / 180;
+      const dLon = ((lon2 - lon1) * Math.PI) / 180;
+      const a =
+        Math.sin(dLat / 2) ** 2 +
+        Math.cos((lat1 * Math.PI) / 180) * Math.cos((lat2 * Math.PI) / 180) * Math.sin(dLon / 2) ** 2;
+      const distKm = +(R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))).toFixed(2);
+      return { from: { lat: lat1, lon: lon1 }, to: { lat: lat2, lon: lon2 }, distanceKm: distKm };
+    }
     default:
       return runMock(slug, input);
   }
