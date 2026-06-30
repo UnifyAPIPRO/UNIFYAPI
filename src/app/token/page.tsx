@@ -67,6 +67,20 @@ export default function TokenPage() {
         </div>
       </section>
 
+      {/* Live Chart */}
+      <section className="space-y-3">
+        <p className="text-xs font-mono text-primary-2 tracking-widest uppercase">Live Chart</p>
+        <div className="rounded-xl overflow-hidden border border-border" style={{ height: 480 }}>
+          <iframe
+            src="https://dexscreener.com/solana/XZkpS3GLbDExGgbcUgVje4wT8EPvFrEJT8GG5ynpy3W?embed=1&theme=dark&trades=0&info=1"
+            width="100%"
+            height="100%"
+            style={{ border: "none" }}
+            allowFullScreen
+          />
+        </div>
+      </section>
+
       {/* Market Data */}
       <section className="space-y-6">
         <h2 className="text-sm font-mono text-primary-2 tracking-widest uppercase text-center">
