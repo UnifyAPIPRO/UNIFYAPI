@@ -48,33 +48,6 @@ export default function TokenPage() {
       </section>
 
 
-      {/* Get $UNIFY label */}
-      <p className="text-sm font-mono text-primary-2 tracking-widest uppercase -mt-16">Get $UNIFY</p>
-
-      {/* BANKRBOT + DEXSCREENER + UNISWAP buttons */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 -mt-14">
-        <div className="btn btn-primary py-4 justify-self-start w-full flex flex-col items-center gap-1 cursor-default">
-          <div className="flex items-center gap-2 text-base font-semibold">
-            <img src="/logos/bankr.png" alt="BANKR" className="h-5 w-5 rounded" />
-            BANKRBOT
-          </div>
-          <span className="text-[11px] font-normal opacity-75">Launch &amp; agent tools</span>
-        </div>
-        <div className="btn btn-primary py-4 justify-self-center w-full flex flex-col items-center gap-1 cursor-default">
-          <div className="flex items-center gap-2 text-base font-semibold">
-            <img src="/logos/dexscreener.png" alt="DEX" className="h-5 w-5 rounded" />
-            DEXSCREENER
-          </div>
-          <span className="text-[11px] font-normal opacity-75">View chart &amp; buy</span>
-        </div>
-        <div className="btn btn-primary py-4 justify-self-end w-full flex flex-col items-center gap-1 cursor-default">
-          <div className="flex items-center gap-2 text-base font-semibold">
-            <img src="/logos/uniswap.png" alt="Uniswap" className="h-5 w-5 rounded-full" />
-            UNISWAP
-          </div>
-          <span className="text-[11px] font-normal opacity-75">Swap on Solana</span>
-        </div>
-      </div>
 
       {/* Market Data */}
       <section className="space-y-6">
