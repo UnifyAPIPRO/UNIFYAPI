@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { TokenCountdown } from "@/components/TokenCountdown";
 import { MarketData } from "@/components/MarketData";
+import { CopyContractButton } from "@/components/CopyContractButton";
 
 export const metadata = {
   title: "$UNIFY Token — UnifyAPI",
@@ -48,6 +49,23 @@ export default function TokenPage() {
       </section>
 
 
+
+      {/* Contract address */}
+      <section className="space-y-4">
+        <h2 className="text-sm font-mono text-primary-2 tracking-widest uppercase">Contract</h2>
+        <div className="card p-6 space-y-3">
+          <p className="text-sm text-muted">
+            $UNIFY is live on Solana. Always verify the contract address before trading.
+          </p>
+          <div className="code-block flex items-center justify-between">
+            <span className="text-muted font-mono text-xs break-all">JNG2Q394yK3m3vZsWU4w2jcFPty2Kkub83e9LTYEASY</span>
+            <div className="flex items-center gap-2 ml-3 shrink-0">
+              <CopyContractButton address="JNG2Q394yK3m3vZsWU4w2jcFPty2Kkub83e9LTYEASY" />
+              <span className="badge">Solana</span>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Market Data */}
       <section className="space-y-6">
