@@ -54,57 +54,28 @@ export default function TokenPage() {
 
       {/* BANKRBOT + DEXSCREENER + UNISWAP buttons */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 -mt-14">
-        <a
-          href="https://bankr.bot/launches/0x0d34974143482f2EAebf058A35D483A614331Ba3"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="btn btn-primary py-4 justify-self-start w-full flex flex-col items-center gap-1"
-        >
+        <div className="btn btn-primary py-4 justify-self-start w-full flex flex-col items-center gap-1 cursor-default">
           <div className="flex items-center gap-2 text-base font-semibold">
             <img src="/logos/bankr.png" alt="BANKR" className="h-5 w-5 rounded" />
             BANKRBOT
           </div>
           <span className="text-[11px] font-normal opacity-75">Launch &amp; agent tools</span>
-        </a>
-        <a
-          href="https://dexscreener.com/base/0xba563f676ba0267a4f6fcc2414e101f37c9996f86d1c5044bce1e180d482eeac"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="btn btn-primary py-4 justify-self-center w-full flex flex-col items-center gap-1"
-        >
+        </div>
+        <div className="btn btn-primary py-4 justify-self-center w-full flex flex-col items-center gap-1 cursor-default">
           <div className="flex items-center gap-2 text-base font-semibold">
             <img src="/logos/dexscreener.png" alt="DEX" className="h-5 w-5 rounded" />
             DEXSCREENER
           </div>
           <span className="text-[11px] font-normal opacity-75">View chart &amp; buy</span>
-        </a>
-        <a
-          href="https://app.uniswap.org/swap?chain=base&outputCurrency=0x0d34974143482f2eaebf058a35d483a614331ba3"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="btn btn-primary py-4 justify-self-end w-full flex flex-col items-center gap-1"
-        >
+        </div>
+        <div className="btn btn-primary py-4 justify-self-end w-full flex flex-col items-center gap-1 cursor-default">
           <div className="flex items-center gap-2 text-base font-semibold">
             <img src="/logos/uniswap.png" alt="Uniswap" className="h-5 w-5 rounded-full" />
             UNISWAP
           </div>
           <span className="text-[11px] font-normal opacity-75">Swap on Base</span>
-        </a>
-      </div>
-
-      {/* Live Chart */}
-      <section className="space-y-3">
-        <p className="text-xs font-mono text-primary-2 tracking-widest uppercase">Live Chart</p>
-        <div className="rounded-xl overflow-hidden border border-border" style={{ height: 480 }}>
-          <iframe
-            src="https://dexscreener.com/base/0xba563f676ba0267a4f6fcc2414e101f37c9996f86d1c5044bce1e180d482eeac?embed=1&theme=dark&trades=0&info=1"
-            width="100%"
-            height="100%"
-            style={{ border: "none" }}
-            allowFullScreen
-          />
         </div>
-      </section>
+      </div>
 
       {/* Market Data */}
       <section className="space-y-6">

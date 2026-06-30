@@ -80,28 +80,14 @@ export function MarketData() {
 
   const change24h = fmtChange(pair?.priceChange?.h24);
 
-  const items: { label: string; value: ReactNode; sub?: ReactNode; highlight?: boolean; positive?: boolean; isChange?: boolean }[] = [
-    {
-      label: "PRICE",
-      value: loading ? "…" : fmtPrice(pair?.priceUsd),
-      sub: loading ? null : (
-        <span className={`text-xs font-semibold mt-1 ${change24h.positive ? "text-green-400" : "text-red-400"}`}>
-          {change24h.positive ? "▲" : "▼"} {change24h.text} 24h
-        </span>
-      ),
-      highlight: true,
-    },
-    {
-      label: "1H CHANGE",
-      value: loading ? "…" : change1h.text,
-      positive: change1h.positive,
-      isChange: true,
-    },
-    { label: "LIQUIDITY", value: loading ? "…" : fmt(pair?.liquidity?.usd) },
-    { label: "VOLUME 24H", value: loading ? "…" : fmt(pair?.volume?.h24) },
-    { label: "VOLUME 1H", value: loading ? "…" : fmt(pair?.volume?.h1) },
-    { label: "MARKET CAP", value: loading ? "…" : fmt(pair?.marketCap) },
-    { label: "FDV", value: loading ? "…" : fmt(pair?.fdv) },
+  const items: { label: string; value?: ReactNode; sub?: ReactNode; isChange?: boolean; positive?: boolean }[] = [
+    { label: "PRICE" },
+    { label: "1H CHANGE" },
+    { label: "LIQUIDITY" },
+    { label: "VOLUME 24H" },
+    { label: "VOLUME 1H" },
+    { label: "MARKET CAP" },
+    { label: "FDV" },
   ];
 
   return (
@@ -111,19 +97,7 @@ export function MarketData() {
           key={d.label}
           className={`card p-5 text-center ${d.label === "PRICE" ? "col-span-2" : ""}`}
         >
-          <div className="text-xs text-muted mb-2">{d.label}</div>
-          <div
-            className={`text-2xl font-bold tabular-nums ${
-              d.isChange
-                ? d.positive
-                  ? "text-primary-2"
-                  : "text-red-400"
-                : "text-primary-2"
-            }`}
-          >
-            {d.value}
-          </div>
-          {d.sub && <div className="flex justify-center">{d.sub}</div>}
+          <div className="text-xs text-muted">{d.label}</div>
         </div>
       ))}
     </div>
