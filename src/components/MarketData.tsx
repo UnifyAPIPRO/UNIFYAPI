@@ -2,8 +2,8 @@
 import { useState, useEffect } from "react";
 import type { ReactNode } from "react";
 
-const PAIR = "0xba563f676ba0267a4f6fcc2414e101f37c9996f86d1c5044bce1e180d482eeac";
-const API = `https://api.dexscreener.com/latest/dex/pairs/base/${PAIR}`;
+const TOKEN = "JNG2Q394yK3m3vZsWU4w2jcFPty2Kkub83e9LTYEASY";
+const API = `https://api.dexscreener.com/latest/dex/tokens/${TOKEN}`;
 
 type PairData = {
   priceUsd?: string;
@@ -77,17 +77,24 @@ export function MarketData() {
   }, []);
 
   const change1h = fmtChange(pair?.priceChange?.h1);
-
   const change24h = fmtChange(pair?.priceChange?.h24);
 
-  const items: { label: string; value?: ReactNode; sub?: ReactNode; isChange?: boolean; positive?: boolean }[] = [
-    { label: "PRICE" },
-    { label: "1H CHANGE" },
-    { label: "LIQUIDITY" },
-    { label: "VOLUME 24H" },
-    { label: "VOLUME 1H" },
-    { label: "MARKET CAP" },
-    { label: "FDV" },
+  const items: { label: string; value: ReactNode; sub?: ReactNode; isChange?: boolean; positive?: boolean }[] = [
+    {
+      label: "PRICE",
+      value: loading ? "…" : fmtPrice(pair?.priceUsd),
+      sub: loading ? null : (
+        <span className={`text-xs font-semibold mt-1 ${change24h.positive ? "text-green-400" : "text-red-400"}`}>
+          {change24h.positive ? "▲" : "▼"} {change24h.text} 24h
+        </span>
+      ),
+    },
+    { label: "1H CHANGE", value: loading ? "…" : change1h.text, isChange: true, positive: change1h.positive },
+    { label: "LIQUIDITY", value: loading ? "…" : fmt(pair?.liquidity?.usd) },
+    { label: "VOLUME 24H", value: loading ? "…" : fmt(pair?.volume?.h24) },
+    { label: "VOLUME 1H", value: loading ? "…" : fmt(pair?.volume?.h1) },
+    { label: "MARKET CAP", value: loading ? "…" : fmt(pair?.marketCap) },
+    { label: "FDV", value: loading ? "…" : fmt(pair?.fdv) },
   ];
 
   return (
@@ -97,7 +104,19 @@ export function MarketData() {
           key={d.label}
           className={`card p-5 text-center ${d.label === "PRICE" ? "col-span-2" : ""}`}
         >
-          <div className="text-xs text-muted">{d.label}</div>
+          <div className="text-xs text-muted mb-2">{d.label}</div>
+          <div
+            className={`text-2xl font-bold tabular-nums ${
+              d.isChange
+                ? d.positive
+                  ? "text-primary-2"
+                  : "text-red-400"
+                : "text-primary-2"
+            }`}
+          >
+            {d.value}
+          </div>
+          {d.sub && <div className="flex justify-center">{d.sub}</div>}
         </div>
       ))}
     </div>
