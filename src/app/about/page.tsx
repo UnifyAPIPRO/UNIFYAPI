@@ -526,8 +526,26 @@ export default function AboutPage() {
           </div>
           {/* Solana */}
           <div className="card p-6 flex flex-col items-center gap-4 text-center">
-            <div className="h-14 w-14 rounded-2xl flex items-center justify-center overflow-hidden bg-black">
-              <svg viewBox="0 0 64 64" width="48" height="48"><path d="M10 44l8-8h36l-8 8H10z" fill="#9945FF"/><path d="M10 20h36l-8 8H10l8-8z" fill="#14F195"/><path d="M46 20l-8 8-8 8h-8l8-8 8-8h8z" fill="#00C2FF"/></svg>
+            <div className="h-14 w-14 rounded-full flex items-center justify-center overflow-hidden bg-black">
+              <svg viewBox="0 0 64 64" width="56" height="56" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="sg1" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="#9945FF"/>
+                    <stop offset="100%" stopColor="#14F195"/>
+                  </linearGradient>
+                  <linearGradient id="sg2" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="#8752F3"/>
+                    <stop offset="100%" stopColor="#00D18C"/>
+                  </linearGradient>
+                  <linearGradient id="sg3" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="#7B3FE4"/>
+                    <stop offset="100%" stopColor="#43B4CA"/>
+                  </linearGradient>
+                </defs>
+                <polygon points="8,46 14,40 56,40 50,46" fill="url(#sg1)"/>
+                <polygon points="8,34 14,28 56,28 50,34" fill="url(#sg3)"/>
+                <polygon points="8,22 14,16 56,16 50,22" fill="url(#sg2)"/>
+              </svg>
             </div>
             <div className="space-y-1">
               <p className="font-semibold">Solana</p>
