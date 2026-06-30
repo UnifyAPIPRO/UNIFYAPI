@@ -183,7 +183,7 @@ export default function AboutPage() {
           </TimelineItem>
           <TimelineItem step="03" title="Top up your balance">
             Balances are denominated in USD and topped up with{" "}
-            <strong className="text-foreground">USDC on Base</strong> via the{" "}
+            <strong className="text-foreground">USDC on Solana</strong> via the{" "}
             <strong className="text-foreground">x402 protocol</strong>. x402 is an open
             standard for machine-native HTTP payments: the server issues an HTTP 402 response
             with payment requirements, an x402-capable wallet pays on-chain and retries, and
@@ -349,7 +349,7 @@ export default function AboutPage() {
           <StackBadge name="x402"           role="Machine-native HTTP payment protocol over USDC" />
           <StackBadge name="MCP (JSON-RPC)" role="Model Context Protocol — AI agent tool interface" />
           <StackBadge name="Tailwind CSS"   role="Utility-first styling with custom design tokens" />
-          <StackBadge name="Base (L2)"      role="Ethereum L2 for USDC settlement via x402" />
+          <StackBadge name="Solana"          role="High-speed blockchain for USDC settlement via x402" />
           <StackBadge name="Vercel"         role="Edge deployment with automatic preview environments" />
         </div>
       </section>
@@ -390,7 +390,7 @@ export default function AboutPage() {
           <p><span className="text-yellow-400">HTTP 402</span> Payment Required</p>
           <p className="text-foreground">accepts: [{"{"}</p>
           <p className="pl-4 text-foreground">scheme: <span className="text-green-400">&quot;exact&quot;</span>,</p>
-          <p className="pl-4 text-foreground">network: <span className="text-green-400">&quot;base&quot;</span>,</p>
+          <p className="pl-4 text-foreground">network: <span className="text-green-400">&quot;solana&quot;</span>,</p>
           <p className="pl-4 text-foreground">amount: <span className="text-green-400">&quot;10000000&quot;</span>,</p>
           <p className="pl-4 text-foreground">asset: <span className="text-green-400">&quot;USDC&quot;</span></p>
           <p className="text-foreground">{"}"}]</p>
@@ -524,16 +524,16 @@ export default function AboutPage() {
               </p>
             </div>
           </div>
-          {/* Base */}
+          {/* Solana */}
           <div className="card p-6 flex flex-col items-center gap-4 text-center">
-            <div className="h-14 w-14 rounded-2xl flex items-center justify-center overflow-hidden">
-              <img src="/logos/base.jpg" alt="Base" className="h-14 w-14 object-cover" />
+            <div className="h-14 w-14 rounded-2xl flex items-center justify-center overflow-hidden bg-black">
+              <svg viewBox="0 0 64 64" width="48" height="48"><path d="M10 44l8-8h36l-8 8H10z" fill="#9945FF"/><path d="M10 20h36l-8 8H10l8-8z" fill="#14F195"/><path d="M46 20l-8 8-8 8h-8l8-8 8-8h8z" fill="#00C2FF"/></svg>
             </div>
             <div className="space-y-1">
-              <p className="font-semibold">Base Network</p>
-              <p className="text-xs font-mono text-blue-400">L2 by Coinbase</p>
+              <p className="font-semibold">Solana</p>
+              <p className="text-xs font-mono text-purple-400">High-performance blockchain</p>
               <p className="text-xs text-muted leading-relaxed">
-                All x402 micropayments settle on Base — Coinbase&apos;s Ethereum L2 with near-zero fees and instant finality.
+                All x402 micropayments settle on Solana — ultra-fast transactions with near-zero fees and instant finality.
               </p>
             </div>
           </div>

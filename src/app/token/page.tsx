@@ -5,7 +5,7 @@ import { MarketData } from "@/components/MarketData";
 export const metadata = {
   title: "$UNIFY Token — UnifyAPI",
   description:
-    "$UNIFY is the token powering the UnifyAPI network — one MCP endpoint connecting AI agents to 818 tools across 250 providers, billed in USDC via x402 on Base.",
+    "$UNIFY is the token powering the UnifyAPI network — one MCP endpoint connecting AI agents to 818 tools across 250 providers, billed in USDC via x402 on Solana.",
 };
 
 
@@ -15,8 +15,8 @@ const UTILITY = [
     body: "$UNIFY connects the people building tools, the agents calling them, and the community growing the catalog — one shared asset across the whole gateway.",
   },
   {
-    title: "Powered by Base",
-    body: "The token lives on Base, the same Coinbase L2 that settles every x402 micropayment in UnifyAPI. Near-zero fees, instant finality.",
+    title: "Powered by Solana",
+    body: "The token lives on Solana — ultra-fast transactions, near-zero fees, and instant finality powering every x402 micropayment in UnifyAPI.",
   },
   {
     title: "Fair launch",
@@ -30,8 +30,7 @@ export default function TokenPage() {
       {/* Hero */}
       <section className="text-center space-y-6 max-w-3xl mx-auto">
         <div className="inline-flex items-center gap-2 border border-primary/30 rounded-full px-4 py-1.5 text-xs font-mono text-primary-2 tracking-widest uppercase">
-          <img src="/logos/base.jpg" alt="Base" className="h-4 w-4 rounded-full" />
-          Base Network
+          Solana Network
         </div>
         <h1 className="text-5xl font-bold">
           <span className="text-primary-2">$UNIFY</span>
@@ -73,7 +72,7 @@ export default function TokenPage() {
             <img src="/logos/uniswap.png" alt="Uniswap" className="h-5 w-5 rounded-full" />
             UNISWAP
           </div>
-          <span className="text-[11px] font-normal opacity-75">Swap on Base</span>
+          <span className="text-[11px] font-normal opacity-75">Swap on Solana</span>
         </div>
       </div>
 

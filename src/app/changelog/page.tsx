@@ -22,7 +22,7 @@ const ENTRIES: Entry[] = [
       "Added a live System Status page with per-category tool availability.",
       "Launched the $UNIFY token page with tokenomics and utility.",
       "Added a Changelog so you can follow what's new.",
-      "Introduced the Built With section on About — Claude Code, Privy, and Base.",
+      "Introduced the Built With section on About — Claude Code, Privy, and Solana.",
       "Added Open Graph images and SEO meta tags for richer link previews.",
     ],
   },
@@ -46,7 +46,7 @@ const ENTRIES: Entry[] = [
     title: "UnifyAPI is live",
     items: [
       "One MCP endpoint exposing 818 tools across 250 providers.",
-      "Pay-per-call billing in USDC via the x402 protocol on Base.",
+      "Pay-per-call billing in USDC via the x402 protocol on Solana.",
       "REST API, OpenAPI 3.1 spec, and machine-readable agent card.",
       "Dashboard with API keys, balance top-up, and usage history.",
       "Sign in with email or Google, powered by Privy.",

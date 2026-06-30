@@ -24,7 +24,7 @@ const PLANS = [
     price: "USDC",
     period: "machine payments",
     highlight: true,
-    features: ["Top up over x402", "Base", "Instant settlement"],
+    features: ["Top up over x402", "Solana", "Instant settlement"],
   },
   {
     name: "Transparent",
@@ -135,7 +135,7 @@ export default async function Home() {
             {[
               <>One MCP endpoint (<span className="text-[#4ade80] border border-[#4ade80]/40 rounded px-1">https://unifyapi.pro/api/mcp</span>) replaces {providerCount} separate provider integrations</>,
               <>{toolCount} tools across travel, finance, weather, entertainment, maps, education, health, music, jobs, science, and more</>,
-              <>x402 payments — USDC on Base, from $0.001 to $0.035 per call depending on the tool</>,
+              <>x402 payments — USDC on Solana, from $0.001 to $0.035 per call depending on the tool</>,
               <>Sign up with email or Google — secured by Privy, get your API key instantly, no setup friction</>,
               <>Usage dashboard — track your calls, costs, and per-tool breakdown in real time</>,
               <>Live tool status — check uptime and latency for any tool before calling</>,

@@ -57,7 +57,7 @@ export default async function StatusPage() {
             { name: "MCP Endpoint", path: "/api/mcp", up: true },
             { name: "REST API", path: "/api/call/{slug}", up: true },
             { name: "Catalog API", path: "/api/tools", up: true },
-            { name: "x402 Billing", path: "USDC on Base", up: true },
+            { name: "x402 Billing", path: "USDC on Solana", up: true },
             { name: "Authentication", path: "Privy", up: true },
           ].map((s) => (
             <div key={s.name} className="flex items-center justify-between p-4">

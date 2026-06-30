@@ -37,7 +37,7 @@ export default function OpengraphImage() {
             <span style={{ color: "#22c55e" }}>Hundreds of API Tools</span>
           </div>
           <div style={{ fontSize: 30, color: "#a1a1aa", maxWidth: "900px", display: "flex" }}>
-            A single MCP endpoint for AI agents. Pay per call with USDC via x402 on Base.
+            A single MCP endpoint for AI agents. Pay per call with USDC via x402 on Solana.
           </div>
         </div>
 

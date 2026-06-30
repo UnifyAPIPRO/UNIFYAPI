@@ -12,7 +12,7 @@ export const metadata = {
 const HIGHLIGHTS = [
   { title: "No subscriptions", body: "You never pay a monthly fee. Charges happen only when a tool actually runs." },
   { title: "Per-call billing", body: "Each call deducts its exact price from your balance — from $0.001 to $0.035 depending on the tool." },
-  { title: "USDC via x402", body: "Top up once with USDC over the x402 protocol on Base. Settlement is instant and automatic." },
+  { title: "USDC via x402", body: "Top up once with USDC over the x402 protocol on Solana. Settlement is instant and automatic." },
 ];
 
 export default async function PricingPage() {

@@ -110,7 +110,7 @@ const GROUPS: { title: string; items: QA[] }[] = [
         q: "What is $UNIFY?",
         a: (
           <>
-            $UNIFY is the community token of the UnifyAPI network, launched on Base. It aligns the
+            $UNIFY is the community token of the UnifyAPI network, launched on Solana. It aligns the
             people building, using, and growing the gateway. Learn more on the{" "}
             <Link href="/token" className="text-primary-2 hover:underline">token page</Link>.
           </>

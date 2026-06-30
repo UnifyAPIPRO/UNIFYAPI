@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     template: "%s",
   },
   description:
-    "UnifyAPI gives AI agents a single MCP endpoint and one billing rail to access 818 tools across 250 providers. Pay per call with USDC via x402 on Base.",
+    "UnifyAPI gives AI agents a single MCP endpoint and one billing rail to access 818 tools across 250 providers. Pay per call with USDC via x402 on Solana.",
   keywords: [
     "MCP",
     "Model Context Protocol",
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     "x402",
     "API gateway",
     "USDC",
-    "Base",
+    "Solana",
     "tool calling",
   ],
   authors: [{ name: "UnifyAPI" }],
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     url: "https://unifyapi.pro",
     title: "UnifyAPI — One key for hundreds of API tools",
     description:
-      "A single MCP endpoint connecting AI agents to 818 tools across 250 providers. Pay per call with USDC via x402 on Base.",
+      "A single MCP endpoint connecting AI agents to 818 tools across 250 providers. Pay per call with USDC via x402 on Solana.",
   },
   twitter: {
     card: "summary_large_image",
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
     creator: "@UnifyAPI",
     title: "UnifyAPI — One key for hundreds of API tools",
     description:
-      "A single MCP endpoint connecting AI agents to 818 tools across 250 providers. Pay per call with USDC via x402 on Base.",
+      "A single MCP endpoint connecting AI agents to 818 tools across 250 providers. Pay per call with USDC via x402 on Solana.",
   },
 };
 

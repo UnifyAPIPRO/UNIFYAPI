@@ -360,7 +360,7 @@ GET /api/tools?category=finance&q=stock`}</pre>
           <p>
             UnifyAPI uses the <strong className="text-foreground">x402 protocol</strong> for
             machine-native payments. Each tool call deducts its cost (in USD) from your account
-            balance. Top up using <strong className="text-foreground">USDC on Base</strong>.
+            balance. Top up using <strong className="text-foreground">USDC on Solana</strong>.
           </p>
           <p>Top up from the dashboard or via API:</p>
           <pre className="code-block">{`POST /api/payments/topup
