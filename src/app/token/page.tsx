@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { TokenCountdown } from "@/components/TokenCountdown";
-import { CopyContractButton } from "@/components/CopyContractButton";
 import { MarketData } from "@/components/MarketData";
 
 export const metadata = {
@@ -49,22 +48,6 @@ export default function TokenPage() {
         </div>
       </section>
 
-      {/* Contract address */}
-      <section className="space-y-4">
-        <h2 className="text-sm font-mono text-primary-2 tracking-widest uppercase">Contract</h2>
-        <div className="card p-6 space-y-3">
-          <p className="text-sm text-muted">
-            $UNIFY is live on Base. Always verify the contract address before trading.
-          </p>
-          <div className="code-block flex items-center justify-between">
-            <span className="text-muted font-mono text-xs break-all">0x0d34974143482f2eaebf058a35d483a614331ba3</span>
-            <div className="flex items-center gap-2 ml-3 shrink-0">
-              <CopyContractButton address="0x0d34974143482f2eaebf058a35d483a614331ba3" />
-              <span className="badge">Base</span>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Get $UNIFY label */}
       <p className="text-sm font-mono text-primary-2 tracking-widest uppercase -mt-16">Get $UNIFY</p>
